@@ -61,6 +61,7 @@ func (h *HandlerAuth) Register(ctx *gin.Context) {
 	}
 	dataRegister := make(map[string]interface{})
 	dataRegister["email"] = body.Email
+	log.Println(otp)
 	ctx.JSON(http.StatusCreated, helpers.NewResponse("Successfully register", dataRegister, nil))
 }
 
@@ -155,6 +156,10 @@ func (h *HandlerAuth) Login(ctx *gin.Context) {
 
 func (h *HandlerAuth) Logout(ctx *gin.Context) {
 	bearerToken := ctx.GetHeader("Authorization")
+	if bearerToken == "" {
+		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("No identity", nil, nil))
+		return
+	}
 	token := strings.Replace(bearerToken, "Bearer ", "", -1)
 	if err := h.RepositoryLogOut(token); err != nil {
 		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Internal Server Error", nil, nil))

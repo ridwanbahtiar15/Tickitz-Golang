@@ -28,7 +28,7 @@ func (r *AuthRepository) RepositoryRegisterUser(body *models.AuthUserModel, hash
 	params["email"] = body.Email
 	params["password"] = hashedPwd
 	params["otp"] = otp
-	query := `insert into users (email, password_user, otp, user_role) values (:email, :password, :otp 'Normal User')`
+	query := `insert into users (email, password_user, otp, user_role) values (:email, :password, :otp, 'Normal User')`
 	_, err := r.NamedExec(query, params)
 	if err != nil {
 		return err
