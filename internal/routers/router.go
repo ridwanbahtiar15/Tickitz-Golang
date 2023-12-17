@@ -19,5 +19,8 @@ func New(db *sqlx.DB) *gin.Engine {
 	authRepo := repositories.InitializeAuthRepository(db)
 	router.Use(middlewares.CORSMiddleware)
 	RouterAuth(authRepo, router)
+	RouterUser(authRepo, router, db)
+	RouterMovie(authRepo, router, db)
+	RouterOrder(authRepo, router, db)
 	return router
 }

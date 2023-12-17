@@ -9,7 +9,7 @@ import (
 )
 
 func Server(router *gin.Engine) *http.Server {
-	var addr string = "localhost:8080"
+	var addr string = ":8080"
 	if os.Getenv("GO_ENV") == "DOCKER" {
 		addr = ":8080"
 	}
