@@ -18,6 +18,7 @@ type IMovieRepository interface {
 	RepositoryGetAllMovie(body *models.QueryParamGetMovie) ([]models.MovieModel, error)
 	RepositoryGetMovie(movieID int) ([]models.MovieModel, error)
 	RepositoryGetSchedule(movieID int) ([]models.Schedule, error)
+	RepositoryGetCinema(body *models.QuerySchedule) ([]models.Cinema, error)
 	RepositoryAddMovie(body *models.NewMovieModel, url string, client *sqlx.Tx) (string, error)
 	RepositoryAddMovieSchedule(body []models.NewMovieSchedule, client *sqlx.Tx, movieID string) error
 	RepositoryEditMovie(body *models.UpdateMovieModel, movieID int, url string) (int64, error)
@@ -34,7 +35,6 @@ func (r *MovieRepository) RepositoryGetAllMovie(body *models.QueryParamGetMovie)
 	data := []models.MovieModel{}
 	query := `SELECT m.id as "no",
     m.small_photo_movie as "movie_photo",
-	m.big_photo_movie as "big_movie_photo",
     m.movie_name as "movie_name",
     m.release_date as "release_date",
     m.directed_by as "director",
@@ -101,7 +101,6 @@ func (r *MovieRepository) RepositoryGetMovie(movieID int) ([]models.MovieModel, 
 	data := []models.MovieModel{}
 	query := `SELECT m.id as "no",
     m.small_photo_movie as "movie_photo",
-	m.big_photo_movie as "big_movie_photo",
     m.movie_name as "movie_name",
     m.release_date as "release_date",
     m.directed_by as "director",
@@ -126,8 +125,9 @@ func (r *MovieRepository) RepositoryGetMovie(movieID int) ([]models.MovieModel, 
 func (r *MovieRepository) RepositoryGetSchedule(movieID int) ([]models.Schedule, error) {
 	data := []models.Schedule{}
 	query := `SELECT
+	s.id as "no",
     s.price_per_ticket as "ticket_price",
-    s.schedule_date as "date",
+    to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
     s.schedule_time as "time",
     c.cinema_name as "cinema",
     s.seat_booked as "seat"
@@ -137,6 +137,35 @@ JOIN
     cinemas c ON s.cinema_id = c.id
 where s.movie_id = $1`
 	err := r.Select(&data, query, movieID)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (r *MovieRepository) RepositoryGetCinema(body *models.QuerySchedule) ([]models.Cinema, error) {
+	data := []models.Cinema{}
+	query := `SELECT
+	s.id as "no",
+    c.cinema_name as "cinema",
+    s.seat_booked as "seat"
+FROM
+    schedules s
+JOIN
+    cinemas c ON s.cinema_id = c.id
+where 
+	s.schedule_date = $1
+and 
+	s.schedule_time = $2`
+	values := []any{
+		body.Date, body.Time,
+	}
+	var page = body.Page
+	if body.Page == 0 {
+		page = 1
+	}
+	query += " LIMIT 6 OFFSET " + strconv.Itoa((page-1)*6)
+	err := r.Select(&data, query, values...)
 	if err != nil {
 		return nil, err
 	}

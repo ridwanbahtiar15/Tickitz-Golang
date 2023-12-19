@@ -1,17 +1,16 @@
 package models
 
 type MovieModel struct {
-	Id              int         `db:"no" valid:"-"`
-	Movie_Photo     interface{} `db:"movie_photo" json:"movie_photo"`
-	Big_Movie_Photo interface{} `db:"big_movie_photo" json:"big_movie_photo"`
-	Movie_Name      string      `db:"movie_name" form:"movie_name" json:"movie_name" valid:"-"`
-	Genre           string      `db:"genre" form:"genre" json:"genre" valid:"matches(^[a-zA-Z ]+$), optional"`
-	Release_Date    string      `db:"release_date" form:"release_date" json:"release_date" valid:"matches(^[a-zA-Z ]+$), optional"`
-	Duration        string      `db:"duration" form:"duration" json:"duration" valid:"optional"`
-	Director_Name   string      `db:"director" form:"director" json:"director" valid:"optional"`
-	Cast            string      `db:"cast" form:"cast" json:"cast" valid:"in(Admin|Normal User),optional"`
-	Category        string      `db:"category" form:"category" json:"category" valid:"optional"`
-	Sinopsis        string      `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"-"`
+	Id            int         `db:"no" valid:"-"`
+	Movie_Photo   interface{} `db:"movie_photo" json:"movie_photo"`
+	Movie_Name    string      `db:"movie_name" form:"movie_name" json:"movie_name" valid:"-"`
+	Genre         string      `db:"genre" form:"genre" json:"genre" valid:"matches(^[a-zA-Z ]+$), optional"`
+	Release_Date  string      `db:"release_date" form:"release_date" json:"release_date" valid:"matches(^[a-zA-Z ]+$), optional"`
+	Duration      string      `db:"duration" form:"duration" json:"duration" valid:"optional"`
+	Director_Name string      `db:"director" form:"director" json:"director" valid:"optional"`
+	Cast          string      `db:"cast" form:"cast" json:"cast" valid:"in(Admin|Normal User),optional"`
+	Category      string      `db:"category" form:"category" json:"category" valid:"optional"`
+	Sinopsis      string      `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"-"`
 }
 
 type QueryParamGetMovie struct {
@@ -60,9 +59,21 @@ type NewMovieSchedule struct {
 }
 
 type Schedule struct {
+	ID           int     `db:"no" valid:"-"`
 	Date         string  `db:"date" form:"date" json:"date" valid:"-"`
 	Ticket_Price int     `db:"ticket_price" form:"ticket_price" json:"ticket_price" valid:"-"`
 	Cinema       string  `db:"cinema" form:"cinema" json:"cinema" valid:"-"`
 	Seat         *string `db:"seat" form:"seat" json:"seat" valid:"-"`
 	Time         string  `db:"time" form:"time" json:"time" valid:"numeric, optional"`
+}
+
+type QuerySchedule struct {
+	Date string `db:"date" form:"date" json:"date" valid:"optional"`
+	Time string `db:"time" form:"time" json:"time" valid:"optional"`
+	Page int    `db:"page" form:"page" json:"page" valid:"numeric, optional"`
+}
+
+type Cinema struct {
+	ID     int    `db:"no" valid:"-"`
+	Cinema string `db:"cinema" form:"cinema" json:"cinema" valid:"-"`
 }

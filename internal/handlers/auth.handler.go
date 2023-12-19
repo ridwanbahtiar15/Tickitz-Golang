@@ -67,7 +67,7 @@ func (h *HandlerAuth) Register(ctx *gin.Context) {
 
 func (h *HandlerAuth) ActivateAccount(ctx *gin.Context) {
 	var query models.AuthUserActivateModel
-	if err := ctx.ShouldBindQuery(&query); err != nil {
+	if err := ctx.ShouldBind(&query); err != nil {
 		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Error binding query user", nil, nil))
 		log.Println(err.Error())
 		return

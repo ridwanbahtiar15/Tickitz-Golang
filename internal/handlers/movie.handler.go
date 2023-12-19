@@ -95,7 +95,7 @@ func (h *HandlerMovie) GetMovieDetails(ctx *gin.Context) {
 	}
 	resultSchedule, errSchedule := h.RepositoryGetSchedule(movieID)
 	if errSchedule != nil {
-		log.Print(err.Error())
+		log.Print(errSchedule.Error())
 		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Internal Movie Schedule Server Error", nil, nil))
 		return
 	}
@@ -107,6 +107,31 @@ func (h *HandlerMovie) GetMovieDetails(ctx *gin.Context) {
 	movieInfo["movie"] = resultMovie
 	movieInfo["schedule"] = resultSchedule
 	ctx.JSON(http.StatusOK, helpers.NewResponse("Successfully get details movie", movieInfo, nil))
+}
+
+func (h *HandlerMovie) GetCinema(ctx *gin.Context) {
+	var querySchedule models.QuerySchedule
+	if err := ctx.ShouldBind(&querySchedule); err != nil {
+		log.Println(err.Error())
+		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Error in binding body movie", nil, nil))
+		return
+	}
+	if _, err := govalidator.ValidateStruct(&querySchedule); err != nil {
+		log.Println(err.Error())
+		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Input not valid", nil, nil))
+		return
+	}
+	result, err := h.RepositoryGetCinema(&querySchedule)
+	if err != nil {
+		log.Println(err.Error())
+		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Internal Server Error", nil, nil))
+		return
+	}
+	if len(result) == 0 {
+		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Movie not found", nil, nil))
+		return
+	}
+	ctx.JSON(http.StatusOK, helpers.NewResponse("Successfully Get User", result, nil))
 }
 
 func (h *HandlerMovie) AddMovie(ctx *gin.Context) {
@@ -218,7 +243,7 @@ func (h *HandlerMovie) UpdateMovie(ctx *gin.Context) {
 			return
 		}
 		defer file.Close()
-		publicId := fmt.Sprintf("%s_%s", bodyUpdateMovie.Director_Name, bodyUpdateMovie.Movie_Name)
+		publicId := fmt.Sprintf("%s_%s", "movie_cover", ID)
 		folder := ""
 		res, err := cld.Uploader(ctx, file, publicId, folder)
 		if err != nil {
