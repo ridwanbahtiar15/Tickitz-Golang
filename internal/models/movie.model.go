@@ -52,10 +52,10 @@ type UpdateMovieModel struct {
 }
 
 type NewMovieSchedule struct {
-	Date         string `db:"date" form:"date" json:"date" binding:"required" valid:"required"`
-	Ticket_Price int    `db:"ticket_price" form:"ticket_price" json:"ticket_price" valid:"numeric, required"`
-	Cinema       int    `db:"cinema" form:"cinema" json:"cinema" valid:"numeric, required"`
-	Time         string `db:"time" form:"time" json:"time" valid:"numeric, required"`
+	Date         string  `db:"date" form:"date" json:"date" binding:"required" valid:"required"`
+	Ticket_Price int     `db:"ticket_price" form:"ticket_price" json:"ticket_price" valid:"numeric, required"`
+	Cinema       int     `db:"cinema" form:"cinema" json:"cinema" valid:"numeric, required"`
+	Time         *string `db:"time" form:"time" json:"time" valid:"numeric, required"`
 }
 
 type Schedule struct {
@@ -64,7 +64,11 @@ type Schedule struct {
 	Ticket_Price int     `db:"ticket_price" form:"ticket_price" json:"ticket_price" valid:"-"`
 	Cinema       string  `db:"cinema" form:"cinema" json:"cinema" valid:"-"`
 	Seat         *string `db:"seat" form:"seat" json:"seat" valid:"-"`
-	Time         string  `db:"time" form:"time" json:"time" valid:"numeric, optional"`
+	Time         *string `db:"time" form:"time" json:"time" valid:"numeric, optional"`
+}
+
+type MovieDetailsSchedule struct {
+	Date string `db:"date" form:"date" json:"date" valid:"-"`
 }
 
 type QuerySchedule struct {

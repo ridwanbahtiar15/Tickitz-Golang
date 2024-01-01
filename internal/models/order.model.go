@@ -1,5 +1,21 @@
 package models
 
+type GetUserOrderHistory struct {
+	No     string `db:"no" form:"no" json:"no" valid:"-"`
+	User   string `db:"user_name" form:"user_name" json:"user_name" valid:"-"`
+	Movie  string `db:"movie" form:"movie" json:"movie" valid:"_"`
+	Cinema string `db:"cinema" form:"cinema" json:"cinema" valid:"_"`
+	Time   string `db:"time" form:"time" json:"time" valid:"_"`
+	Date   string `db:"date" form:"date" json:"date" valid:"_"`
+	// Schedules    int    `db:"schedules" form:"schedules" json:"schedules" valid:"_"`
+	Seats        string `db:"seats" form:"seats" json:"seats" valid:"-"`
+	Ticket       int    `db:"total_ticket" form:"total_ticket" json:"total_ticket" valid:"-"`
+	Price_Amount int    `db:"total_purchase" form:"total_purchase" json:"total_purchase" valid:"-"`
+	Activate     string `db:"active_until" form:"active_until" json:"active_until" valid:"-"`
+	VANumber     string `db:"va_number" form:"va_number" json:"va_number" valid:"-"`
+	Status       string `db:"status" form:"status" json:"status" valid:"-"`
+}
+
 type OrderDetailModel struct {
 	Schedules    int    `db:"schedules" form:"schedules" json:"schedules" valid:"numeric"`
 	Seats        string `db:"seats" form:"seats" json:"seats" valid:"required"`

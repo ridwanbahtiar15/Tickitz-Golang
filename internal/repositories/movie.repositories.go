@@ -88,7 +88,7 @@ func (r *MovieRepository) RepositoryGetAllMovie(body *models.QueryParamGetMovie)
 	if body.Page == 0 {
 		page = 1
 	}
-	query += " LIMIT 6 OFFSET " + strconv.Itoa((page-1)*6)
+	query += " LIMIT 8 OFFSET " + strconv.Itoa((page-1)*8)
 	err := r.Select(&data, query, values...)
 	if err != nil {
 		log.Println("Error executing query:", err.Error())
@@ -120,22 +120,30 @@ func (r *MovieRepository) RepositoryGetMovie(movieID int) ([]models.MovieModel, 
 	return data, nil
 }
 
-// func (r *MovieRepository) RepositoryMovieSchedule(movieID int) ([]models.Schedule, error) {}
-
 func (r *MovieRepository) RepositoryGetSchedule(movieID int) ([]models.Schedule, error) {
 	data := []models.Schedule{}
 	query := `SELECT
-	s.id as "no",
-    s.price_per_ticket as "ticket_price",
-    to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
-    s.schedule_time as "time",
-    c.cinema_name as "cinema",
-    s.seat_booked as "seat"
-FROM
-    schedules s
-JOIN
-    cinemas c ON s.cinema_id = c.id
-where s.movie_id = $1`
+		s.id as "no",
+	    s.price_per_ticket as "ticket_price",
+	    to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
+	    s.schedule_time as "time",
+	    c.cinema_name as "cinema",
+	    s.seat_booked as "seat"
+	FROM
+	    schedules s
+	JOIN
+	    cinemas c ON s.cinema_id = c.id
+	where s.movie_id = $1`
+
+	// data := []models.MovieDetailsSchedule{}
+	// query := `SELECT
+	// 	to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date"
+	// FROM
+	// 	schedules s
+	// WHERE
+	// 	s.movie_id = $1
+	// GROUP BY
+	// 	s.schedule_date`
 	err := r.Select(&data, query, movieID)
 	if err != nil {
 		return nil, err
@@ -206,7 +214,7 @@ func (r *MovieRepository) RepositoryAddMovie(body *models.NewMovieModel, url str
 }
 
 func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSchedule, client *sqlx.Tx, movieID string) error {
-	query := `insert into schedules (movie_id, price_per_ticket, schedule_date, cinema_id)
+	query := `insert into schedules (movie_id, price_per_ticket, schedule_date, schedule_time, cinema_id)
 	values `
 	var filteredBody []string
 	filterBody := make(map[string]interface{})
@@ -221,8 +229,8 @@ func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSched
 		filteredBody = append(filteredBody, fmt.Sprintf(`:schedule_date%d `, j))
 		filterBody[fmt.Sprintf("schedule_date%d", j)] = body[i].Date
 
-		// filteredBody = append(filteredBody, fmt.Sprintf(`:schedule_time%d `, j))
-		// filterBody[fmt.Sprintf("schedule_time%d", j)] = body[i].Time
+		filteredBody = append(filteredBody, fmt.Sprintf(`:schedule_time%d `, j))
+		filterBody[fmt.Sprintf("schedule_time%d", j)] = body[i].Time
 
 		filteredBody = append(filteredBody, fmt.Sprintf(`:cinema_id%d)`, j))
 		filterBody[fmt.Sprintf("cinema_id%d", j)] = body[i].Cinema
@@ -231,8 +239,8 @@ func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSched
 	if len(filteredBody) > 0 {
 		query += strings.Join(filteredBody, ", ")
 	}
-	log.Println(query)
-	log.Println(filterBody)
+	// log.Println(query)
+	// log.Println(filterBody)
 	rows, err := client.NamedQuery(query, filterBody)
 	if err != nil {
 		return err

@@ -22,16 +22,16 @@ type Meta struct {
 	TotalPage int    `json:"total_page,omitempty"`
 }
 
-func GetPagination(ctx *gin.Context, totalData []int, page int) Meta {
+func GetPagination(ctx *gin.Context, totalData []int, page int, limit float64) Meta {
 	var nextPage, prevPage string
-	url := fmt.Sprintf("%s%s", ctx.Request.Host, ctx.Request.URL.RequestURI())
+	url := ctx.Request.URL.RequestURI()
 	pages := 1
 	if page != 0 {
 		pages = page
 	}
 	nextPage = url[:len(url)-1] + strconv.Itoa(page+1)
 	prevPage = url[:len(url)-1] + strconv.Itoa(page-1)
-	lastPage := int(math.Ceil(float64(totalData[0]) / 6))
+	lastPage := int(math.Ceil(float64(totalData[0]) / limit))
 	if page == 0 {
 		nextPage = fmt.Sprintf("%s&page=%d", url, pages+1)
 		prevPage = "null"

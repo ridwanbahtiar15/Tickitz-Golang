@@ -14,5 +14,6 @@ func RouterUser(authRepo *repositories.AuthRepository, g *gin.Engine, db *sqlx.D
 	repository := repositories.InitializeUserRepository(db)
 	handler := handlers.InitializeUserHandler(repository)
 	route.GET("/profile", middlewares.JWTGate(authRepo, "Admin", "Normal User"), handler.GetUserProfile)
+	route.GET("/authorization", middlewares.JWTGate(authRepo, "Admin", "Normal User"), handler.CheckAuth)
 	route.PATCH("", middlewares.JWTGate(authRepo, "Admin", "Normal User"), handler.UpdateProfileUser)
 }

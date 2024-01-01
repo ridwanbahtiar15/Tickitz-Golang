@@ -118,3 +118,7 @@ func (h *HandlerUser) UpdateProfileUser(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, helpers.NewResponse("Successfully update user", &body, nil))
 }
+
+func (h *HandlerUser) CheckAuth(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, helpers.NewResponse("Access available", nil, nil))
+}

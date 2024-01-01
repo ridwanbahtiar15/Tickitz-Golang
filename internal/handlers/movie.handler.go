@@ -54,7 +54,7 @@ func (h *HandlerMovie) GetAllMovie(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Data not found", nil, nil))
 		return
 	}
-	meta := helpers.GetPagination(ctx, data, queryMovie.Page)
+	meta := helpers.GetPagination(ctx, data, queryMovie.Page, 8)
 	ctx.JSON(http.StatusOK, helpers.NewResponse("Successfully Get User", result, &meta))
 }
 
