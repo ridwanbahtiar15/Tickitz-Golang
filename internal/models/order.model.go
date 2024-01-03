@@ -13,6 +13,7 @@ type GetUserOrderHistory struct {
 	Price_Amount int    `db:"total_purchase" form:"total_purchase" json:"total_purchase" valid:"-"`
 	Activate     string `db:"active_until" form:"active_until" json:"active_until" valid:"-"`
 	VANumber     string `db:"va_number" form:"va_number" json:"va_number" valid:"-"`
+	Cinema_Logo  string `db:"cinema_logo" form:"cinema_logo" json:"cinema_logo" valid:"-"`
 	Status       string `db:"status" form:"status" json:"status" valid:"-"`
 }
 

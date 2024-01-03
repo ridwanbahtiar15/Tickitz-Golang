@@ -42,6 +42,7 @@ func (r *OrderRepository) RepositoryGetOrderByID(id int, page string) ([]models.
 	query := `SELECT o.id as "no",
     m.movie_name as "movie",
 	c.cinema_name as "cinema",
+	c.cinema_logo as "cinema_logo",
 	COALESCE(u.first_name, '') || ' ' || COALESCE(u.last_name, '') AS "user_name",
     s.schedule_time as "time",
 	to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
