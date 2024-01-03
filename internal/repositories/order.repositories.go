@@ -124,6 +124,7 @@ func (r *OrderRepository) RepositoryGetScheduleDetail(scheduleId int) ([]models.
     to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
     s.schedule_time as "time",
     c.cinema_name as "cinema",
+	c.cinema_logo as "cinema_logo",
     COALESCE(STRING_AGG(ot.seats, ', '), 'No data') as "seats"
 	FROM
 		schedules s
@@ -136,7 +137,7 @@ func (r *OrderRepository) RepositoryGetScheduleDetail(scheduleId int) ([]models.
 	WHERE
 		s.id = $1
 	GROUP BY
-		s.id, m.movie_name, m.small_photo_movie, s.price_per_ticket, s.schedule_date, s.schedule_time, c.cinema_name, s.seat_booked
+		s.id, m.movie_name, m.small_photo_movie, s.price_per_ticket, s.schedule_date, s.schedule_time, c.cinema_name, s.seat_booked, c.cinema_logo
 	`
 	err := r.Select(&data, query, scheduleId)
 	if err != nil {

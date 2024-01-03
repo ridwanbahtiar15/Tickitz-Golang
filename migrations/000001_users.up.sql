@@ -1,0 +1,20 @@
+CREATE TABLE "tickitz".users (
+	id serial4 NOT NULL,
+	user_photo_profile text NULL,
+	first_name varchar(100) NULL,
+	last_name varchar(100) NULL,
+	email varchar(100) NOT NULL,
+	password_user varchar(100) NOT NULL,
+	activated bool NOT NULL DEFAULT false,
+	otp int4 NULL,
+	points int4 NOT NULL DEFAULT 0,
+	created_at timestamp NOT NULL DEFAULT now(),
+	updated_at timestamp NULL,
+	deleted_at timestamp NULL,
+	user_role varchar(25) NOT NULL,
+	phone varchar(25) NULL,
+	CONSTRAINT pk_users PRIMARY KEY (id),
+	CONSTRAINT users_email_key UNIQUE (email),
+	CONSTRAINT users_phone_key UNIQUE (phone),
+	CONSTRAINT users_user_role_check CHECK (((user_role)::text = ANY (ARRAY[('Admin'::character varying)::text, ('Normal User'::character varying)::text])))
+);

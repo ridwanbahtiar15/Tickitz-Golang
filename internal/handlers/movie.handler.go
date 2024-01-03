@@ -151,6 +151,7 @@ func (h *HandlerMovie) AddMovie(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Input not valid", nil, nil))
 		return
 	}
+	log.Println(&schedule)
 	tx, errTx := h.Begin()
 	if errTx != nil {
 		log.Println(errTx.Error())

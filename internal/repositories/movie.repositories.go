@@ -36,7 +36,7 @@ func (r *MovieRepository) RepositoryGetAllMovie(body *models.QueryParamGetMovie)
 	query := `SELECT m.id as "no",
     m.small_photo_movie as "movie_photo",
     m.movie_name as "movie_name",
-    m.release_date as "release_date",
+    to_char(m.release_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "release_date",
     m.directed_by as "director",
     m.duration as "duration",
     m.sinopsis as "sinopsis",
@@ -102,7 +102,7 @@ func (r *MovieRepository) RepositoryGetMovie(movieID int) ([]models.MovieModel, 
 	query := `SELECT m.id as "no",
     m.small_photo_movie as "movie_photo",
     m.movie_name as "movie_name",
-    m.release_date as "release_date",
+    to_char(m.release_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "release_date",
     m.directed_by as "director",
     m.duration as "duration",
     m.sinopsis as "sinopsis",
@@ -128,6 +128,7 @@ func (r *MovieRepository) RepositoryGetSchedule(movieID int) ([]models.Schedule,
 	    to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
 	    s.schedule_time as "time",
 	    c.cinema_name as "cinema",
+		c.cinema_logo as "cinema_logo",
 	    s.seat_booked as "seat"
 	FROM
 	    schedules s
@@ -239,8 +240,8 @@ func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSched
 	if len(filteredBody) > 0 {
 		query += strings.Join(filteredBody, ", ")
 	}
-	// log.Println(query)
-	// log.Println(filterBody)
+	log.Println(query)
+	log.Println(filterBody)
 	rows, err := client.NamedQuery(query, filterBody)
 	if err != nil {
 		return err

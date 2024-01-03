@@ -48,7 +48,7 @@ type UpdateMovieModel struct {
 	Cast            string      `db:"cast" form:"cast" json:"cast" valid:"optional"`
 	Category        string      `db:"category" form:"category" json:"category" valid:"in(G|PG|PG-13|R|NC-17), optional"`
 	Sinopsis        string      `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"optional"`
-	Schedules       string      `form:"schedules" json:"schedules" valid:"optional"`
+	Schedules       string      `form:"schedules" json:"schedules" valid:"required"`
 }
 
 type NewMovieSchedule struct {
@@ -63,6 +63,7 @@ type Schedule struct {
 	Date         string  `db:"date" form:"date" json:"date" valid:"-"`
 	Ticket_Price int     `db:"ticket_price" form:"ticket_price" json:"ticket_price" valid:"-"`
 	Cinema       string  `db:"cinema" form:"cinema" json:"cinema" valid:"-"`
+	Cinema_Logo  string  `db:"cinema_logo" form:"cinema_logo" json:"cinema_logo" valid:"-"`
 	Seat         *string `db:"seat" form:"seat" json:"seat" valid:"-"`
 	Time         *string `db:"time" form:"time" json:"time" valid:"numeric, optional"`
 }
