@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +25,8 @@ type Meta struct {
 
 func GetPagination(ctx *gin.Context, totalData []int, page int, limit float64) Meta {
 	var nextPage, prevPage string
-	url := ctx.Request.URL.RequestURI()
+	urlFull := fmt.Sprintf("%s%s", ctx.Request.Host, ctx.Request.URL.RequestURI())
+	url := strings.Split(urlFull, "?")[1]
 	pages := 1
 	if page != 0 {
 		pages = page

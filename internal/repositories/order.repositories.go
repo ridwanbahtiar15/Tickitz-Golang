@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"fmt"
 	"gilangrizaltin/Backend_Golang/internal/models"
 	"log"
 	"strconv"
@@ -15,6 +14,7 @@ type OrderRepository struct {
 
 type IOrderRepository interface {
 	RepositoryGetOrderByID(id int, page string) ([]models.GetUserOrderHistory, error)
+	RepositoryGetStatisticOrder(movie_name string) ([]models.OrderStatistic, error)
 	RepositoryCreateOrder(client *sqlx.Tx, Order_Id string, User_Id int, dataOrder *models.OrderDetailModel, paymentUrl string) error
 	RepositoryOrderSuccess(orderId string) (int64, error)
 	RepositoryOrderFailed(orderId string) (int64, error)
@@ -67,10 +67,30 @@ func (r *OrderRepository) RepositoryGetOrderByID(id int, page string) ([]models.
 	AND
 	o.deleted_at is null
 	LIMIT 4 OFFSET $2`
-	fmt.Println(offset)
+	// fmt.Println(offset)
 	err := r.Select(&data, query, values...)
 	if err != nil {
 		log.Println("Error executing query:", err.Error())
+		return nil, err
+	}
+	return data, nil
+}
+
+func (r *OrderRepository) RepositoryGetStatisticOrder(movie_name string) ([]models.OrderStatistic, error) {
+	data := []models.OrderStatistic{}
+	values := []any{
+		"%" + movie_name + "%",
+	}
+	query := `select 
+	to_char(s.schedule_date::timestamp at time zone 'UTC', 'YYYY-MM-DD') as "date",
+	SUM(ot.total_ticket) as "total"
+	from order_transaction ot
+	join schedules s on ot.schedules_id = s.id
+	join movies m on s.movie_id = m.id
+	where m.movie_name ilike $1
+	group by s.schedule_date`
+	err := r.Select(&data, query, values...)
+	if err != nil {
 		return nil, err
 	}
 	return data, nil

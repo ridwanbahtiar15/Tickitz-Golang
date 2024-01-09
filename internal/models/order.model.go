@@ -53,3 +53,8 @@ type ScheduleDetail struct {
 	Seat         string `db:"seats" form:"seats" json:"seats" valid:"-"`
 	Cinema_Logo  string `db:"cinema_logo" form:"cinema_logo" json:"cinema_logo" valid:"-"`
 }
+
+type OrderStatistic struct {
+	Date  string `db:"date" json:"date" valid:"-"`
+	Total int    `db:"total" json:"total" valid:"-"`
+}

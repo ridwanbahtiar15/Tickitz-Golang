@@ -21,7 +21,7 @@ type IMovieRepository interface {
 	RepositoryGetCinema(body *models.QuerySchedule) ([]models.Cinema, error)
 	RepositoryAddMovie(body *models.NewMovieModel, url string, client *sqlx.Tx) (string, error)
 	RepositoryAddMovieSchedule(body []models.NewMovieSchedule, client *sqlx.Tx, movieID string) error
-	RepositoryEditMovie(body *models.UpdateMovieModel, movieID int, url string) (int64, error)
+	RepositoryEditMovie(body *models.UpdateMovieModel, movieID int, url string, client *sqlx.Tx) (int64, error)
 	RepositoryDeleteMovie(movieID int) (int64, error)
 	RepositoryCountAllMovie(body *models.QueryParamGetMovie) ([]int, error)
 	Begin() (*sqlx.Tx, error)
@@ -240,8 +240,8 @@ func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSched
 	if len(filteredBody) > 0 {
 		query += strings.Join(filteredBody, ", ")
 	}
-	log.Println(query)
-	log.Println(filterBody)
+	// log.Println(query)
+	// log.Println(filterBody)
 	rows, err := client.NamedQuery(query, filterBody)
 	if err != nil {
 		return err
@@ -250,7 +250,7 @@ func (r *MovieRepository) RepositoryAddMovieSchedule(body []models.NewMovieSched
 	return nil
 }
 
-func (r *MovieRepository) RepositoryEditMovie(body *models.UpdateMovieModel, movieID int, url string) (int64, error) {
+func (r *MovieRepository) RepositoryEditMovie(body *models.UpdateMovieModel, movieID int, url string, client *sqlx.Tx) (int64, error) {
 	var conditional []string
 	query := `
         UPDATE movies
@@ -300,7 +300,8 @@ func (r *MovieRepository) RepositoryEditMovie(body *models.UpdateMovieModel, mov
 		query += strings.Join(conditional, ", ")
 	}
 	query += ` ,updated_at = NOW() WHERE id = :Id`
-	result, err := r.NamedExec(query, params)
+	log.Println(query)
+	result, err := client.NamedExec(query, params)
 	if err != nil {
 		return 0, err
 	}

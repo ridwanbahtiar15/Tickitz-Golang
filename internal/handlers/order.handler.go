@@ -35,7 +35,7 @@ func (h *HandlerOrder) GetOrder(ctx *gin.Context) {
 		return
 	}
 	if len(result) == 0 {
-		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Order not found", nil, nil))
+		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Data not found", nil, nil))
 		return
 	}
 	data, errCount := h.RepositoryCountAllOrder(id)
@@ -51,6 +51,21 @@ func (h *HandlerOrder) GetOrder(ctx *gin.Context) {
 	}
 	meta := helpers.GetPagination(ctx, data, currentPage, 4)
 	ctx.JSON(http.StatusOK, helpers.NewResponse("Success", result, &meta))
+}
+
+func (h *HandlerOrder) GetOrderStatistic(ctx *gin.Context) {
+	movie, _ := ctx.GetQuery("movie_name")
+	result, err := h.RepositoryGetStatisticOrder(movie)
+	if err != nil {
+		log.Println(err.Error())
+		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Internal Server Error", nil, nil))
+		return
+	}
+	if len(result) == 0 {
+		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Order not found", nil, nil))
+		return
+	}
+	ctx.JSON(http.StatusOK, helpers.NewResponse("Success", result, nil))
 }
 
 func (h *HandlerOrder) GetDetailSchedule(ctx *gin.Context) {

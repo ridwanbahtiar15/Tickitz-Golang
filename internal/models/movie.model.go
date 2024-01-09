@@ -1,5 +1,7 @@
 package models
 
+import "mime/multipart"
+
 type MovieModel struct {
 	Id            int         `db:"no" valid:"-"`
 	Movie_Photo   interface{} `db:"movie_photo" json:"movie_photo"`
@@ -22,25 +24,25 @@ type QueryParamGetMovie struct {
 }
 
 type NewMovieModel struct {
-	Id              int         `db:"no" valid:"-"`
-	Movie_Photo     interface{} `db:"movie_photo" json:"movie_photo"`
-	Big_Movie_Photo interface{} `db:"big_movie_photo" json:"big_movie_photo"`
-	Movie_Name      string      `db:"movie_name" form:"movie_name" json:"movie_name" valid:"required"`
-	Genre           string      `db:"genre" form:"genre" json:"genre" valid:"in(Thriller|Adventure|Horror|Romantic|Sci fi), required"`
-	Release_Date    string      `db:"release_date" form:"release_date" json:"release_date" valid:"required"`
-	Duration        string      `db:"duration" form:"duration" json:"duration" valid:"required"`
-	Director_Name   string      `db:"director" form:"director" json:"director" valid:"required"`
-	Cast            string      `db:"cast" form:"cast" json:"cast" valid:"required"`
-	Category        string      `db:"category" form:"category" json:"category" valid:"in(G|PG|PG-13|R|NC-17)"`
-	Sinopsis        string      `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"required"`
-	Schedules       string      `form:"schedules" json:"schedules" valid:"required"`
+	Id              int            `db:"no" valid:"-"`
+	Movie_Photo     multipart.File `db:"movie_photo" json:"movie_photo" valid:"required"`
+	Big_Movie_Photo interface{}    `db:"big_movie_photo" json:"big_movie_photo"`
+	Movie_Name      string         `db:"movie_name" form:"movie_name" json:"movie_name" valid:"required"`
+	Genre           string         `db:"genre" form:"genre" json:"genre" valid:"in(Thriller|Adventure|Horror|Romantic|Sci fi), required"`
+	Release_Date    string         `db:"release_date" form:"release_date" json:"release_date" valid:"required"`
+	Duration        string         `db:"duration" form:"duration" json:"duration" valid:"required"`
+	Director_Name   string         `db:"director" form:"director" json:"director" valid:"required"`
+	Cast            string         `db:"cast" form:"cast" json:"cast" valid:"required"`
+	Category        string         `db:"category" form:"category" json:"category" valid:"in(G|PG|PG-13|R|NC-17)"`
+	Sinopsis        string         `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"required"`
+	Schedules       string         `form:"schedules" json:"schedules" valid:"required"`
 }
 
 type UpdateMovieModel struct {
 	Id              int         `db:"no" valid:"-"`
 	Movie_Photo     interface{} `db:"movie_photo" json:"movie_photo" valid:"optional"`
 	Big_Movie_Photo interface{} `db:"big_movie_photo" json:"big_movie_photo" valid:"optional"`
-	Movie_Name      string      `db:"movie_name" form:"movie_name" json:"movie_name" valid:"optional"`
+	Movie_Name      string      `db:"movie_name" form:"movie_name" json:"movie_name" valid:"required"`
 	Genre           string      `db:"genre" form:"genre" json:"genre" valid:"in(Thriller|Adventure|Horror|Romantic|Sci fi), optional"`
 	Release_Date    string      `db:"release_date" form:"release_date" json:"release_date" valid:"optional"`
 	Duration        string      `db:"duration" form:"duration" json:"duration" valid:"optional"`
@@ -48,7 +50,7 @@ type UpdateMovieModel struct {
 	Cast            string      `db:"cast" form:"cast" json:"cast" valid:"optional"`
 	Category        string      `db:"category" form:"category" json:"category" valid:"in(G|PG|PG-13|R|NC-17), optional"`
 	Sinopsis        string      `db:"sinopsis" form:"sinopsis" json:"sinopsis" valid:"optional"`
-	Schedules       string      `form:"schedules" json:"schedules" valid:"required"`
+	Schedules       string      `form:"schedules" json:"schedules" valid:"optional"`
 }
 
 type NewMovieSchedule struct {

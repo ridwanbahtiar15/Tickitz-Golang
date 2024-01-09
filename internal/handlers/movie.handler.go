@@ -143,15 +143,12 @@ func (h *HandlerMovie) AddMovie(ctx *gin.Context) {
 	}
 	var schedule []models.NewMovieSchedule
 	json.Unmarshal([]byte(bodyMovie.Schedules), &schedule)
-	// userInfo := make(map[string]interface{})
-	// userInfo["movie"] = bodyMovie
-	// userInfo["schedule"] = schedule
 	if _, err := govalidator.ValidateStruct(&bodyMovie); err != nil {
 		log.Println(err.Error())
 		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Input not valid", nil, nil))
 		return
 	}
-	log.Println(&schedule)
+	// log.Println(&schedule)
 	tx, errTx := h.Begin()
 	if errTx != nil {
 		log.Println(errTx.Error())
@@ -223,9 +220,17 @@ func (h *HandlerMovie) UpdateMovie(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Failed to get id movie", nil, nil))
 		return
 	}
+	var schedule []models.NewMovieSchedule
+	json.Unmarshal([]byte(bodyUpdateMovie.Schedules), &schedule)
 	if _, err := govalidator.ValidateStruct(&bodyUpdateMovie); err != nil {
 		log.Println(err.Error())
 		ctx.JSON(http.StatusBadRequest, helpers.NewResponse("Input not valid", nil, nil))
+		return
+	}
+	tx, errTx := h.Begin()
+	if errTx != nil {
+		log.Println(errTx.Error())
+		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Error begin tx", nil, nil))
 		return
 	}
 	cld, err := helpers.InitCloudinary()
@@ -254,15 +259,29 @@ func (h *HandlerMovie) UpdateMovie(ctx *gin.Context) {
 		}
 		dataUrl = res.SecureURL
 	}
-	result, errEditMovie := h.RepositoryEditMovie(&bodyUpdateMovie, movieID, dataUrl)
+	result, errEditMovie := h.RepositoryEditMovie(&bodyUpdateMovie, movieID, dataUrl, tx)
 	if errEditMovie != nil {
 		log.Println(errEditMovie.Error())
 		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Interal Server Error", nil, nil))
+		defer tx.Rollback()
 		return
+	}
+	if len(schedule) > 0 {
+		if errInserMovieSchedule := h.RepositoryAddMovieSchedule(schedule, tx, ID); errInserMovieSchedule != nil {
+			log.Println(errInserMovieSchedule.Error())
+			ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Error in insert order product", nil, nil))
+			defer tx.Rollback()
+			return
+		}
 	}
 	var successEdit int64 = 1
 	if result < successEdit {
 		ctx.JSON(http.StatusNotFound, helpers.NewResponse("Data not found", nil, nil))
+		defer tx.Rollback()
+		return
+	}
+	if err := tx.Commit(); err != nil {
+		ctx.JSON(http.StatusInternalServerError, helpers.NewResponse("Error in comitting order", nil, nil))
 		return
 	}
 	ctx.JSON(http.StatusOK, helpers.NewResponse("Successfully update movie", nil, nil))
