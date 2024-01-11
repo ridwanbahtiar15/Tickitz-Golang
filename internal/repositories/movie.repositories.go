@@ -314,7 +314,7 @@ func (r *MovieRepository) RepositoryDeleteMovie(movieID int) (int64, error) {
 	set 
 	deleted_at = now ()
 	where id = $1
-	returning full_name`
+	returning movie_name`
 	result, err := r.Exec(query, movieID)
 	if err != nil {
 		return 0, err
