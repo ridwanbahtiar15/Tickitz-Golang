@@ -1,148 +1,94 @@
 # Backend Tickitz with Golang
 
-<div align="center">
-  <img src="https://res.cloudinary.com/doncmmfaa/image/upload/v1705476761/samples/Tickitz_1_qjg2bh.png" alt="Logo" />
-</div>
+<img src="https://res.cloudinary.com/doncmmfaa/image/upload/v1705476761/samples/Tickitz_1_qjg2bh.png" width="200px" alt="logo"></img>
 
-This project is about to show you on my performance in developing backend architecture using Golang. It has couple of features and API also several security authorization. It is a website for purchasing cinema tickets with main features including a list of films and their details, ordering cinema tickets based on the desired time and place. There are 2 roles, namely Consumer and Admin. Its has authentication and authorization for several accessible pages based on role.
+A web api project for ordering ticket movie online. There are 4 operations that can be performed, Get (fetching data), Post (insert data), Update (update partial data), delete (delete data).
 
-## Technologies used in this project
+## Built With
 
-- Gin Gonic \
-  Gin Gonic is a lightweight and fast web framework for Golang. \
-  [Gin Gonic Documentation](https://pkg.go.dev/github.com/gin-gonic/gin#section-readme)
+- [Golang](https://go.dev/)
+- [Postgre SQL](https://www.postgresql.org/)
+- [GinGonic](https://gin-gonic.com/)
+- [GoValidator](https://github.com/asaskevich/govalidator)
+- [Cloudinary](https://github.com/cloudinary/cloudinary-go)
 
-- JSON Web Token \
-  JSON Web Tokens provide a secure and compact way to transmit information between parties. \
-  [JSON Web Token](https://jwt.io/introduction)
+## Configure app
 
-- Cloudinary \
-  Cloudinary is a cloud-based service for managing and optimizing images and videos. \
-  [Cloudinary Documentation](https://cloudinary.com/documentation)
+Create file `.env` then edit it with your settings
+according to your needs. You will need:
 
-- Midtrans \
-  Midtrans is a payment gateway service that simplifies online transactions. \
-  [Midtrans Documentation](https://docs.midtrans.com/)
+| Key                  | Value                            |
+| -------------------- | -------------------------------- |
+| DB_HOST              | Your Database Host               |
+| DB_NAME              | Your Database Name               |
+| DB_USER              | Your Database User               |
+| DB_PASSWORD          | Your Database Password           |
+| JWT_KEY              | Your JWT Key                     |
+| ISSUER               | Your Issuer                      |
+| CLOUDINERY_NAME      | Your Cloudinary Name             |
+| CLOUDINERY_KEY       | Your Cloudinary Key              |
+| CLOUDINERY_SECRET    | Your Cloudinary Secret           |
+| MIDTRANS_ID_MERCHANT | Your Midtrans ID Merchant Secret |
+| MIDTRANS_CLIENT_KEY  | Your Midtrans ID Client Key      |
+| MIDTRANS_CLIENT_KEY  | Your Midtrans ID Client Key      |
+| MIDTRANS_SERVER_KEY  | Your Midtrans ID Server          |
 
-- Govalidator \
-  Govalidator is a versatile validation library for Golang. \
-  [Govalidator Documentation](https://github.com/asaskevich/govalidator)
+## Install And Run Locally
 
-## Environment Variables
+1.  Clone project from github repository
 
-To run this project, you will need to add the following environment variables to your .env file
+        $ git clone https://github.com/GilangRizaltin/Tickitz-Golang
 
-```bash
-  DB_HOST = "YOUR DB_HOST"
-  DB_NAME = "YOUR DB_NAME"
-  DB_USER = "YOUR DB_USER"
-  DB_PASSWORD = "YOUR DB_PASSWORD"
-  JWT_KEY = "YOUR JWT_KEY"
-  ISSUER = "YOUR ISSUER"
-  CLOUDINARY_NAME = "YOUR CLOUDINARY_NAME"
-  CLOUDINARY_KEY = "YOUR CLOUDINARY_KEY"
-  CLOUDINARY_SECRET = "YOUR CLOUDINARY_SECRET"
-  MIDTRANS_ID_MERCHANT = "YOUR MIDTRANS_ID_MERCHANT"
-  MIDTRANS_CLIENT_KEY = "YOUR MIDTRANS_CLIENT_KEY"
-  MIDTRANS_SERVER_KEY = "YOUR MIDTRANS_SERVER_KEY"
-```
+2.  go to folder coffee-shop
 
-## Run Locally
+        $ cd coffee-shop-golang
 
-Clone the project
+3.  install dependencies
 
-```bash
-  $ git clone https://github.com/GilangRizaltin/Tickitz-Golang
-```
+        $ go get .
 
-Go to the project directory
+4.  Start the server
 
-```bash
-  $ cd Tickitz-Golang
-```
-
-Install dependencies
-
-```bash
-  $ go get .
-```
-
-Start the server
-
-```bash
-  $ go run ./cmd/main.go
-```
-
-## Running Tests
-
-To run tests, run the following command
-
-```bash
-  $ go test .
-```
+        $ go run ./cmd/main.go
 
 ## API Reference
 
-#### Authentication & Authorization
+Auth
+| Route | Method | Description |
+| -------------- | ----------------------- | ------ |
+| /auth/login | POST | Login user |
+| /auth/register | POST | Register user |
+| /auth/logout | DELETE | Logout user |
 
-```http
-  /auth
-```
+Users
+| Route | Method | Description |
+| -------------- | ----------------------- | ------ |
+| /user/login | GET | Login user |
+| /user/authorization | POST | Checking user registration |
+| /user/ | PATCH | Update user |
 
-| Method   | Endpoint      | Description                        |
-| :------- | :------------ | :--------------------------------- |
-| `POST`   | `"/register"` | register user                      |
-| `POST`   | `"/login"`    | get access and identity of user    |
-| `DELETE` | `"/logout"`   | delete access and identity of user |
+Movies
+| Route | Method | Description |
+| -------------- | ----------------------- | ------ |
+| /movie/ | GET | Get all movie |
+| /movie/:movie_id | GET | Get movie detail by id |
+| /movie/:schedule_id | GET | Get movie schedule |
 
-#### Users
-
-```http
-  /user
-```
-
-| Method  | Endpoint           | Description                     |
-| :------ | :----------------- | :------------------------------ |
-| `GET`   | `"/profile"`       | Fet user's profile              |
-| `POST`  | `"/authorization"` | Checking user's authorization   |
-| `PATCH` | `"/"`              | Update users detail and profile |
-
-#### Products
-
-```http
-  /movie
-```
-
-| Method | Endpoint                | Description                                 |
-| :----- | :---------------------- | :------------------------------------------ |
-| `GET`  | `"/"`                   | GET all movie                               |
-| `GET`  | `"/movie/:movie_id"`    | Get movie details **Required** movie_id     |
-| `GET`  | `"/movie/:schedule_id"` | Get movie schedule **Required** schedule_id |
-
-#### Orders
-
-```http
-  /order
-```
-
-| Method | Endpoint          | Description                                           |
-| :----- | :---------------- | :---------------------------------------------------- |
-| `GET`  | `"/"`             | Get orders per users **Required** authorization token |
-| `POST` | `"/"`             | Create transaction order                              |
-| `POST` | `"/notification"` | Push notification for sucessfull payment              |
+Orders
+| Route | Method | Description |
+| -------------- | ----------------------- | ------ |
+| /orders/ | GET | Get all order |
+| /orders/ | POST | Create transaction |
+| /orders/notification | GET | Push notification for sucessfull payment |
 
 ## Documentation
 
-[Postman Documentation](https://documenter.getpostman.com/view/29696636/2s9Ykn8MDe)
+[Postman Documentation](https://documenter.getpostman.com/view/28541505/2s9YyqhMwh)
 
 ## Related Project
 
-[Front End (React Js)](https://github.com/GilangRizaltin/Tickitz-Frontend-Gilang)
+[Front End with React JS](https://github.com/ridwanbahtiar15/Tickitz-Frontend)
 
 ## Collaborator
 
-- [@Ridwan Bahtiar](https://github.com/ridwanbahtiar15)
-
-## Support
-
-For support, email gilangzaltin@gmail
+- [Gilang Rizaltin](https://github.com/GilangRizaltin)
