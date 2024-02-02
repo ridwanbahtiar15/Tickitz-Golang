@@ -19,6 +19,8 @@ A web api project for ordering ticket movie online. There are 4 operations that 
 Create file `.env` then edit it with your settings
 according to your needs. You will need:
 
+<pre>
+<code>
 DB_HOST = Your Database Host
 DB_NAME = Your Database Host
 DB_USER = Your Database User
@@ -27,10 +29,12 @@ JWT_KEY = Your JWT Key
 ISSUER = Your Issuer
 CLOUDINERY_NAME = Your Cloudinary Name
 CLOUDINERY_KEY = Your Cloudinary Key
-CLOUDINERY_SECRET = Your Cloudinary Secret
+CLOUDINARY_SECRET = Your Cloudinary Secret
 MIDTRANS_ID_MERCHANT = Your Midtrans ID Merchant
 MIDTRANS_CLIENT_KEY = Your Midtrans Client Key
 MIDTRANS_SERVER_KEY =  Your Midtrans Server Key
+</code>
+</pre>
 
 ## Install And Run Locally
 
