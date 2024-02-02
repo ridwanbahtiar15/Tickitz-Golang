@@ -1,6 +1,8 @@
 # Backend Tickitz with Golang
 
-<img src="https://res.cloudinary.com/doncmmfaa/image/upload/v1705476761/samples/Tickitz_1_qjg2bh.png" width="200px" alt="logo"></img>
+<p align="center">
+        <img src="https://res.cloudinary.com/doncmmfaa/image/upload/v1705476761/samples/Tickitz_1_qjg2bh.png" width="200px" alt="logo"></img>
+</p>
 
 A web api project for ordering ticket movie online. There are 4 operations that can be performed, Get (fetching data), Post (insert data), Update (update partial data), delete (delete data).
 
@@ -17,27 +19,24 @@ A web api project for ordering ticket movie online. There are 4 operations that 
 Create file `.env` then edit it with your settings
 according to your needs. You will need:
 
-| Key                  | Value                            |
-| -------------------- | -------------------------------- |
-| DB_HOST              | Your Database Host               |
-| DB_NAME              | Your Database Name               |
-| DB_USER              | Your Database User               |
-| DB_PASSWORD          | Your Database Password           |
-| JWT_KEY              | Your JWT Key                     |
-| ISSUER               | Your Issuer                      |
-| CLOUDINERY_NAME      | Your Cloudinary Name             |
-| CLOUDINERY_KEY       | Your Cloudinary Key              |
-| CLOUDINERY_SECRET    | Your Cloudinary Secret           |
-| MIDTRANS_ID_MERCHANT | Your Midtrans ID Merchant Secret |
-| MIDTRANS_CLIENT_KEY  | Your Midtrans ID Client Key      |
-| MIDTRANS_CLIENT_KEY  | Your Midtrans ID Client Key      |
-| MIDTRANS_SERVER_KEY  | Your Midtrans ID Server          |
+DB_HOST = Your Database Host
+DB_NAME = Your Database Host
+DB_USER = Your Database User
+DB_PASS = Your Database Password
+JWT_KEY = Your JWT Key
+ISSUER = Your Issuer
+CLOUDINERY_NAME = Your Cloudinary Name
+CLOUDINERY_KEY = Your Cloudinary Key
+CLOUDINERY_SECRET = Your Cloudinary Secret
+MIDTRANS_ID_MERCHANT = Your Midtrans ID Merchant
+MIDTRANS_CLIENT_KEY = Your Midtrans Client Key
+MIDTRANS_SERVER_KEY =  Your Midtrans Server Key
 
 ## Install And Run Locally
 
 1.  Clone project from github repository
 
-        $ git clone https://github.com/GilangRizaltin/Tickitz-Golang
+        $ git clone https://github.com/ridwanbahtiar15/Tickitz-Golang
 
 2.  go to folder coffee-shop
 
