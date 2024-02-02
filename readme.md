@@ -90,4 +90,4 @@ Orders
 
 ## Collaborator
 
-- [Gilang Rizaltin](https://github.com/GilangRizaltin)
+[Gilang Rizaltin](https://github.com/GilangRizaltin)
